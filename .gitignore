@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables (Очень важно! Не пушим свои секреты)
+.env
+.env.*
+!.env.example
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Databases
+*.db
+*.sqlite3
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Tests / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# OS generated files
+Thumbs.db
+desktop.ini
