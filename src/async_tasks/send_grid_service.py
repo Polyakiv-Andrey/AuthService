@@ -7,6 +7,7 @@ from pydantic import EmailStr
 from sendgrid import Mail, SendGridAPIClient
 
 from src.config.settings import settings
+from src.utils.logger import app_logger
 
 
 class SendGridService:
@@ -48,9 +49,23 @@ class SendGridService:
         )
         loop = asyncio.get_event_loop()
         try:
-            await loop.run_in_executor(None, self.client.send, message)
+            response = await loop.run_in_executor(None, self.client.send, message)
+            app_logger.info(
+                f"Email sent successfully to {email}",
+                extra={
+                    "tags": {
+                        "email": email,
+                        "otp_type": otp_type.value,
+                        "status_code": response.status_code
+                    }
+                }
+            )
         except Exception as e:
-            print(f"Error sending email to {email}: {e}")
+            app_logger.error(
+                f"Failed to send email to {email}: {str(e)}",
+                extra={"tags": {"email": email, "otp_type": otp_type.value}},
+                exc_info=True
+            )
 
 
 

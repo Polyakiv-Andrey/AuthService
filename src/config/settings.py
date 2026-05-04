@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from src.config.auth import AuthSettings
 from src.config.company import CompanySettings
 from src.config.db import DatabaseSettings
+from src.config.logging import LoggerSettings
 from src.config.sand_grid import SandGridSettings
 
 
@@ -18,6 +19,7 @@ class Settings(BaseSettings):
     send_grid: SandGridSettings = SandGridSettings()
     company: CompanySettings = CompanySettings()
     auth: AuthSettings = AuthSettings()
+    logger: LoggerSettings = LoggerSettings()
 
 
 settings = Settings()
