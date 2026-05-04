@@ -1,6 +1,6 @@
 import logging
 import queue
-from logging.handlers import QueueListener, QueueHandler
+from logging.handlers import QueueHandler, QueueListener
 
 import logging_loki
 

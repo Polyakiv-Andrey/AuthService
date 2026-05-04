@@ -28,7 +28,10 @@ async def create_user(body: CreateUserRequest, db: AsyncSession):
     user_account = await has_user_account_db(db, email=body.email)
     if not user_account or not user_account.email_verified:
         if body.password != body.password2:
-            app_logger.warning("Password mismatch during registration", extra={"tags": {"email": body.email}})
+            app_logger.warning(
+                "Password mismatch during registration",
+                extra={"tags": {"email": body.email}}
+            )
             raise HTTPException(status_code=400, detail="Incorrect password")
         hashed_password = hash_password(body.password)
         if not user_account:
@@ -56,16 +59,28 @@ async def create_user(body: CreateUserRequest, db: AsyncSession):
 async def verify_email_service(body: VerifyEmailRequest, db: AsyncSession):
     registration_otp = await get_last_otp_code_for_user_db(body.email, db)
     if not registration_otp:
-        app_logger.warning("Verification failed: OTP not found", extra={"tags": {"email": body.email}})
+        app_logger.warning(
+            "Verification failed: OTP not found",
+            extra={"tags": {"email": body.email}}
+        )
         raise HTTPException(status_code=400, detail="Code does not exist")
     if registration_otp.is_used:
-        app_logger.warning("Verification failed: Code already used", extra={"tags": {"email": body.email}})
+        app_logger.warning(
+            "Verification failed: Code already used",
+            extra={"tags": {"email": body.email}}
+        )
         raise HTTPException(status_code=400, detail="Code already used")
     if registration_otp.expires_at < datetime.now(timezone.utc):
-        app_logger.warning("Verification failed: Code expired", extra={"tags": {"email": body.email}})
+        app_logger.warning(
+            "Verification failed: Code expired",
+            extra={"tags": {"email": body.email}}
+        )
         raise HTTPException(status_code=400, detail="Code expired")
     if registration_otp.attempts_left == 0:
-        app_logger.warning("Verification failed: No attempts left", extra={"tags": {"email": body.email}})
+        app_logger.warning(
+            "Verification failed: No attempts left",
+            extra={"tags": {"email": body.email}}
+        )
         raise HTTPException(
             status_code=400,
             detail="No attempts left. Please request a new code."
@@ -88,7 +103,10 @@ async def verify_email_service(body: VerifyEmailRequest, db: AsyncSession):
         )
     user_id = await verify_email_db(registration_otp.id, body.email, db)
     jwt_tokens = generate_jwt_tokens(user_id)
-    app_logger.info("Email verified successfully", extra={"tags": {"email": body.email}})
+    app_logger.info(
+        "Email verified successfully",
+        extra={"tags": {"email": body.email}}
+    )
     return JWTTokenResponse(
         access_token=jwt_tokens["access_token"],
         refresh_token=jwt_tokens["refresh_token"],
