@@ -19,7 +19,7 @@ class User(Base):
     active: Mapped[bool] = mapped_column(default=True)
     role: Mapped[Role] = mapped_column(default=Role.CUSTOMER)
 
-    def __str__(self):
+    def __repr__(self):
         return f"User(email={self.email}, roles={self.role})"
 
 
@@ -32,8 +32,11 @@ class OtpCode(Base):
     email: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
     is_used: Mapped[bool] = mapped_column(default=False)
     expires_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now() + timedelta(minutes=10)
+        DateTime(timezone=True), default=lambda: datetime.now() + timedelta(minutes=10)
     )
     attempts_left: Mapped[int] = mapped_column(default=3)
     otp_type: Mapped[OTPType] = mapped_column(default=OTPType.register, nullable=False)
+
+    def __repr__(self):
+        masked_code = f"{self.otp_code[:2]}****" if self.otp_code else "None"
+        return f"OtpCode(email={self.email!r}, code={masked_code}, type={self.otp_type})"

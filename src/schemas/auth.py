@@ -1,3 +1,5 @@
+import re
+
 from pydantic import BaseModel, EmailStr, field_validator, model_validator
 
 
@@ -11,6 +13,19 @@ class CreateUserRequest(BaseModel):
         if self.password != self.password2:
             raise ValueError("Passwords must match")
         return self
+
+    @field_validator("password")
+    @classmethod
+    def check_password_requirements(cls, password: str) -> str:
+        if len(password) < 11:
+            raise ValueError("Password must be at least 11 characters long")
+        if not any(char.isdigit() for char in password):
+            raise ValueError("Password must contain at least one digit")
+        if not any(char.isupper() for char in password):
+            raise ValueError("Password must contain at least one uppercase letter")
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+            raise ValueError("Password must contain at least one special character")
+        return password
 
 
 class CreateUserResponse(BaseModel):
