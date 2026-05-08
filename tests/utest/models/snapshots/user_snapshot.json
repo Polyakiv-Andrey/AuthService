@@ -1,1 +1,56 @@
-{'table_name': 'user', 'columns': {'email': {'type': 'VARCHAR(255)', 'nullable': False, 'default': None}, 'password_hash': {'type': 'VARCHAR(500)', 'nullable': False, 'default': None}, 'email_verified': {'type': 'BOOLEAN', 'nullable': False, 'default': None}, 'active': {'type': 'BOOLEAN', 'nullable': False, 'default': None}, 'role': {'type': 'VARCHAR(8)', 'nullable': False, 'default': None}, 'id': {'type': 'CHAR(32)', 'nullable': False, 'default': 'gen_random_uuid()'}, 'created_at': {'type': 'DATETIME', 'nullable': False, 'default': 'now()'}, 'updated_at': {'type': 'DATETIME', 'nullable': False, 'default': 'now()'}}, 'indices': {'ix_user_email': {'columns': ['email'], 'unique': True}}, 'primary_key': ['id']}
+{
+    "columns": {
+        "active": {
+            "default": null,
+            "nullable": false,
+            "type": "BOOLEAN"
+        },
+        "created_at": {
+            "default": "now()",
+            "nullable": false,
+            "type": "DATETIME"
+        },
+        "email": {
+            "default": null,
+            "nullable": false,
+            "type": "VARCHAR(255)"
+        },
+        "email_verified": {
+            "default": null,
+            "nullable": false,
+            "type": "BOOLEAN"
+        },
+        "id": {
+            "default": "gen_random_uuid()",
+            "nullable": false,
+            "type": "CHAR(32)"
+        },
+        "password_hash": {
+            "default": null,
+            "nullable": false,
+            "type": "VARCHAR(500)"
+        },
+        "role": {
+            "default": null,
+            "nullable": false,
+            "type": "VARCHAR(8)"
+        },
+        "updated_at": {
+            "default": "now()",
+            "nullable": false,
+            "type": "DATETIME"
+        }
+    },
+    "indices": {
+        "ix_user_email": {
+            "columns": [
+                "email"
+            ],
+            "unique": true
+        }
+    },
+    "primary_key": [
+        "id"
+    ],
+    "table_name": "user"
+}

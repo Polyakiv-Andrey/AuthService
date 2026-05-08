@@ -1,1 +1,61 @@
-{'table_name': 'otpcode', 'columns': {'otp_code': {'type': 'VARCHAR(6)', 'nullable': False, 'default': None}, 'email': {'type': 'VARCHAR(255)', 'nullable': False, 'default': None}, 'is_used': {'type': 'BOOLEAN', 'nullable': False, 'default': None}, 'expires_at': {'type': 'DATETIME', 'nullable': False, 'default': None}, 'attempts_left': {'type': 'INTEGER', 'nullable': False, 'default': None}, 'otp_type': {'type': 'VARCHAR(8)', 'nullable': False, 'default': None}, 'id': {'type': 'CHAR(32)', 'nullable': False, 'default': 'gen_random_uuid()'}, 'created_at': {'type': 'DATETIME', 'nullable': False, 'default': 'now()'}, 'updated_at': {'type': 'DATETIME', 'nullable': False, 'default': 'now()'}}, 'indices': {'ix_otpcode_email': {'columns': ['email'], 'unique': False}}, 'primary_key': ['id']}
+{
+    "columns": {
+        "attempts_left": {
+            "default": null,
+            "nullable": false,
+            "type": "INTEGER"
+        },
+        "created_at": {
+            "default": "now()",
+            "nullable": false,
+            "type": "DATETIME"
+        },
+        "email": {
+            "default": null,
+            "nullable": false,
+            "type": "VARCHAR(255)"
+        },
+        "expires_at": {
+            "default": null,
+            "nullable": false,
+            "type": "DATETIME"
+        },
+        "id": {
+            "default": "gen_random_uuid()",
+            "nullable": false,
+            "type": "CHAR(32)"
+        },
+        "is_used": {
+            "default": null,
+            "nullable": false,
+            "type": "BOOLEAN"
+        },
+        "otp_code": {
+            "default": null,
+            "nullable": false,
+            "type": "VARCHAR(6)"
+        },
+        "otp_type": {
+            "default": null,
+            "nullable": false,
+            "type": "VARCHAR(8)"
+        },
+        "updated_at": {
+            "default": "now()",
+            "nullable": false,
+            "type": "DATETIME"
+        }
+    },
+    "indices": {
+        "ix_otpcode_email": {
+            "columns": [
+                "email"
+            ],
+            "unique": false
+        }
+    },
+    "primary_key": [
+        "id"
+    ],
+    "table_name": "otpcode"
+}

@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from src.models import Base
@@ -28,4 +30,6 @@ def test_model_structure_snapshot(table, snapshot):
         "primary_key": [col.name for col in table.primary_key],
     }
     snapshot.snapshot_dir = "tests/utest/models/snapshots"
-    snapshot.assert_match(str(current_structure), f"{table.name}_snapshot.json")
+    json_data = json.dumps(current_structure, indent=4, sort_keys=True, ensure_ascii=False)
+    content_for_snapshot = json_data + "\n"
+    snapshot.assert_match(str(content_for_snapshot), f"{table.name}_snapshot.json")
