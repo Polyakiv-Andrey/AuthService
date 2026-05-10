@@ -37,15 +37,9 @@ class SendGridService:
                 }
             case _:
                 raise ValueError("Unknown OTP type")
-        html_content = self._render_template(
-            template_name,
-            **template_args
-        )
+        html_content = self._render_template(template_name, **template_args)
         message = Mail(
-            from_email=self.from_email,
-            to_emails=email,
-            subject=subject,
-            html_content=html_content
+            from_email=self.from_email, to_emails=email, subject=subject, html_content=html_content
         )
         loop = asyncio.get_event_loop()
         try:
@@ -56,19 +50,16 @@ class SendGridService:
                     "tags": {
                         "email": email,
                         "otp_type": otp_type.value,
-                        "status_code": response.status_code
+                        "status_code": response.status_code,
                     }
-                }
+                },
             )
         except Exception as e:
             app_logger.error(
                 f"Failed to send email to {email}: {str(e)}",
                 extra={"tags": {"email": email, "otp_type": otp_type.value}},
-                exc_info=True
+                exc_info=True,
             )
-
-
-
 
 
 send_grid_service = SendGridService()
