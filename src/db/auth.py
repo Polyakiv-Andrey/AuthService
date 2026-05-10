@@ -16,6 +16,7 @@ async def has_user_account_db(db: AsyncSession, email: EmailStr) -> User | None:
     result = await db.execute(query)
     return result.scalar()
 
+
 async def create_user_db(email: EmailStr, hashed_password: str, db: AsyncSession) -> bool:
     new_user = User(
         email=email,
@@ -29,28 +30,23 @@ async def create_user_db(email: EmailStr, hashed_password: str, db: AsyncSession
         await db.rollback()
         return False
 
+
 async def update_user_db(email: EmailStr, hashed_password: str, db: AsyncSession) -> bool:
-    query = (
-        update(User)
-        .where(User.email == email)
-        .values(password_hash=hashed_password)
-    )
+    query = update(User).where(User.email == email).values(password_hash=hashed_password)
     try:
-        await db.execute(query)
+        result = await db.execute(query)
         await db.commit()
+        if result.rowcount == 0:
+            return False
         return True
     except IntegrityError:
         await db.rollback()
         return False
 
-async def create_otp_code_db(email: EmailStr, db: AsyncSession) -> str | None:
 
+async def create_otp_code_db(email: EmailStr, db: AsyncSession) -> str | None:
     otp_code = "".join([str(secrets.randbelow(10)) for _ in range(6)])
-    stmt = insert(OtpCode).values(
-        email=email,
-        otp_code=otp_code,
-        is_used=False
-    )
+    stmt = insert(OtpCode).values(email=email, otp_code=otp_code, is_used=False)
     try:
         await db.execute(stmt)
         await db.commit()
@@ -76,9 +72,7 @@ async def get_last_otp_code_for_user_db(email: str, db: AsyncSession) -> OtpCode
 
 
 async def decrease_attempt_amount(otp_id: UUID, attempts_left: int, db: AsyncSession) -> None:
-    stmt = (
-        update(OtpCode).where(OtpCode.id == otp_id).values(attempts_left=attempts_left)
-    )
+    stmt = update(OtpCode).where(OtpCode.id == otp_id).values(attempts_left=attempts_left)
     try:
         await db.execute(stmt)
         await db.commit()
@@ -86,16 +80,10 @@ async def decrease_attempt_amount(otp_id: UUID, attempts_left: int, db: AsyncSes
         await db.rollback()
 
 
-async def verify_email_db(otp_id: UUID, email: EmailStr, db: AsyncSession) ->  UUID:
-    user_stmt = (
-        update(User).where(User.email == email).values(email_verified=True)
-    )
-    otp_stmt = (
-        update(OtpCode).where(OtpCode.id == otp_id).values(is_used=True)
-    )
-    select_stmt = (
-        select(User).where(User.email == email)
-    )
+async def verify_email_db(otp_id: UUID, email: EmailStr, db: AsyncSession) -> UUID:
+    user_stmt = update(User).where(User.email == email).values(email_verified=True)
+    otp_stmt = update(OtpCode).where(OtpCode.id == otp_id).values(is_used=True)
+    select_stmt = select(User).where(User.email == email)
     try:
         await db.execute(user_stmt)
         await db.execute(otp_stmt)

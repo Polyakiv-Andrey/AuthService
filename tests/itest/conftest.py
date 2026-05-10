@@ -50,8 +50,17 @@ async def async_client(setup_database):
     app.dependency_overrides[get_db] = override_get_db
     async with AsyncClient(
         transport=ASGITransport(app=app),
-        base_url="http://testserver",  # Общепринятый алиас для тестов
+        base_url="http://testserver",
     ) as ac:
         yield ac
 
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+async def db_session(setup_database):
+    engine = create_async_engine(setup_database)
+    session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+    async with session_factory() as session:
+        yield session
+    await engine.dispose()
